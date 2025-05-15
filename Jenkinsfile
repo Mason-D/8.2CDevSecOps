@@ -9,26 +9,35 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'npm install'
+                sh 'npm install'
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat 'npm test || exit /b 0' // Allows pipeline to continue despite test failures
+                sh 'npm test || exit /b 0' // Allows pipeline to continue despite test failures
             }
         }
 
         stage('Generate Coverage Report') {
             steps {
                 // Ensure coverage report exists
-                bat 'npm run coverage || exit /b 0'
+                sh 'npm run coverage || exit /b 0'
             }
         }
 
         stage('NPM Audit (Security Scan)') {
             steps {
-                bat 'npm audit || exit /b 0' // This will show known CVEs in the output
+                sh 'npm audit || exit /b 0' // This will show known CVEs in the output
+            }
+        }
+
+        stage('SonarCloud Analysis') {
+            steps {
+                echo 'Starting SonarCloud Analysis...'
+                withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                    
+                }
             }
         }
     }
