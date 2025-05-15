@@ -15,7 +15,6 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat 'snyk auth || exit /b 0'
                 bat 'npm test || exit /b 0' // Allows pipeline to continue despite test failures
             }
         }
