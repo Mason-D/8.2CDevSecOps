@@ -52,7 +52,7 @@ pipeline {
                     
                     bat """
                         sonar-scanner-cli\\bin\\sonar-scanner.bat ^
-                        -Dsonar.login=${SONAR_TOKEN}
+                        -Dsonar.login=%SONAR_TOKEN%
                     """
                 }
             }
