@@ -32,6 +32,7 @@ pipeline {
             }
         }
 
+        //sonarcloud
         stage('SonarCloud Analysis') {
             steps {
                 echo 'Starting SonarCloud Analysis...'
