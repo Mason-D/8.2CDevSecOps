@@ -28,7 +28,7 @@ pipeline {
 
         stage('NPM Audit (Security Scan)') {
             steps {
-                bat 'npm audit || exit /b 0' // This will show known CVEs in the output
+                bat 'npm audit || exit /b 0' //This will show known CVEs in the output
             }
         }
 
