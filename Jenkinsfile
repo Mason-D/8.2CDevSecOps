@@ -15,7 +15,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                powershell 'npm test || exit /b 0' // Allows pipeline to continue despite test failures
+                powershell -Command 'npm test || exit /b 0' // Allows pipeline to continue despite test failures
             }
         }
 
