@@ -1,10 +1,5 @@
 pipeline {
     agent any
-    environment {
-        SONAR_SCANNER_HOME = 'sonar-scanner-cli'
-        JAVA_HOME = 'C:\\Program Files\\Java\\jdk-21'
-        PATH = "${JAVA_HOME}\\bin;${env.PATH}"
-    }
     stages {
         stage('Checkout') {
             steps {
@@ -20,29 +15,32 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat 'npm test || exit /b 0'
+                bat 'npm test || exit /b 0' // Allows pipeline to continue despite test failures
             }
         }
 
         stage('Generate Coverage Report') {
             steps {
+                // Ensure coverage report exists
                 bat 'npm run coverage || exit /b 0'
             }
         }
 
         stage('NPM Audit (Security Scan)') {
             steps {
-                bat 'npm audit || exit /b 0'
+                bat 'npm audit || exit /b 0' //This will show known CVEs in the output
             }
         }
 
+        //sonarcloud
         stage('SonarCloud Analysis') {
             steps {
                 script {
-                    if (!fileExists("${SONAR_SCANNER_HOME}/bin/sonar-scanner.bat")) {
+                    //download SonarScanner
+                    if (!fileExists("sonar-scanner-cli/bin/sonar-scanner.bat")) {
                         echo 'Downloading SonarScanner...'
                         bat '''
-                            curl -L -o sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-windows.zip
+                            curl -L -o sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-7.1.0.4889-windows-x64.zip
                             powershell -Command "Expand-Archive sonar-scanner.zip -DestinationPath ."
                             rename sonar-scanner-4.7.0.2747-windows sonar-scanner-cli
                         '''
@@ -51,8 +49,9 @@ pipeline {
                     }
                 }
                 withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                    
                     bat """
-                        ${SONAR_SCANNER_HOME}\\bin\\sonar-scanner.bat ^
+                        sonar-scanner-cli\\bin\\sonar-scanner.bat ^
                         -Dsonar.login=%SONAR_TOKEN%
                     """
                 }
