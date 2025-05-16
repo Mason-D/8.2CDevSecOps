@@ -48,6 +48,7 @@ pipeline {
                         echo 'SonarScanner already exists.'
                     }
                 }
+                //pass credentials
                 withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
                     
                     bat """
