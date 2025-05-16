@@ -42,7 +42,7 @@ pipeline {
                         bat '''
                             curl -L -o sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-7.1.0.4889-windows-x64.zip
                             powershell -Command "Expand-Archive sonar-scanner.zip -DestinationPath ."
-                            rename sonar-scanner-4.7.0.2747-windows sonar-scanner-cli
+                            for /D %%f in (sonar-scanner-*-windows) do rename "%%f" sonar-scanner-cli
                         '''
                     } else {
                         echo 'SonarScanner already exists.'
